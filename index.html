@@ -142,6 +142,7 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -154,6 +155,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             color: white;
+            min-width: 120px;
         }
 
         .btn-primary {
@@ -185,6 +187,18 @@
             background: #fdcb6e;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(254, 202, 87, 0.4);
+        }
+
+        .btn-ad {
+            background: #ff5722;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn-ad:hover {
+            background: #e64a19;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
         }
 
         .message {
@@ -239,7 +253,7 @@
     <div class="game-container">
         <div class="header">
             <h1>🧠 لعبة الذاكرة</h1>
-            <div class="subtitle">تذكر الأزواج المتطابقة</div>
+            <div class="subtitle">تذكر الأزواج المتطابقة</div>
         </div>
 
         <div class="stats">
@@ -252,7 +266,7 @@
                 <div class="value attempts" id="attempts">0</div>
             </div>
             <div class="stat-item">
-                <div class="label">🏆 أفضل محاولات</div>
+                <div class="label">🏆 أفضل محاولات</div>
                 <div class="value best" id="bestScore">-</div>
             </div>
         </div>
@@ -260,8 +274,11 @@
         <div class="grid" id="grid"></div>
 
         <div class="controls">
-            <button class="btn btn-primary" onclick="restartGame()">🔄 إعادة التشغيل</button>
-            <button class="btn btn-success" onclick="showBest()">🏆 أفضل نتيجة</button>
+            <button class="btn btn-primary" onclick="restartGame()">🔄 إعادة التشغيل</button>
+            <button class="btn btn-success" onclick="showBest()">🏆 أفضل نتيجة</button>
+            <a href="https://www.effectivecpmnetwork.com/d7zpwx51?key=30be6e813273b463e96f5fe176774faa" target="_blank" style="flex:1; min-width:120px; text-decoration:none;">
+                <button class="btn btn-ad" style="width:100%;">🎁 احصل على مكافأتك!</button>
+            </a>
         </div>
 
         <div class="message" id="message"></div>
@@ -281,6 +298,7 @@
         let timer = 0;
         let timerInterval = null;
         let gameStarted = false;
+        let isGameFinished = false;
 
         const grid = document.getElementById('grid');
         const timerDisplay = document.getElementById('timer');
@@ -288,7 +306,7 @@
         const bestScoreDisplay = document.getElementById('bestScore');
         const messageDisplay = document.getElementById('message');
 
-        // تحديث عرض أفضل نتيجة
+        // تحديث عرض أفضل نتيجة
         function updateBestDisplay() {
             if (bestScore) {
                 bestScoreDisplay.textContent = bestScore;
@@ -297,7 +315,7 @@
             }
         }
 
-        // إنشاء الأرقام
+        // إنشاء الأرقام
         function generateNumbers() {
             const numbers = [];
             for (let i = 1; i <= 8; i++) {
@@ -315,7 +333,7 @@
             return array;
         }
 
-        // إنشاء البطاقات
+        // إنشاء البطاقات
         function createCards() {
             const values = generateNumbers();
             cardValues = values;
@@ -340,8 +358,9 @@
             if (card === firstCard) return;
             if (card.classList.contains('matched')) return;
             if (card.classList.contains('revealed')) return;
+            if (isGameFinished) return;
 
-            // بدء المؤقت عند أول نقرة
+            // بدء المؤقت عند أول نقرة
             if (!gameStarted) {
                 startTimer();
                 gameStarted = true;
@@ -378,11 +397,12 @@
 
                 if (matchedPairs === 8) {
                     // فوز
+                    isGameFinished = true;
                     stopTimer();
                     const timeStr = formatTime(timer);
                     const evaluation = evaluatePerformance(attempts);
                     
-                    // تحديث أفضل نتيجة
+                    // تحديث أفضل نتيجة
                     let isNewRecord = false;
                     if (!bestScore || attempts < parseInt(bestScore)) {
                         bestScore = attempts;
@@ -400,15 +420,20 @@
                     const bestScoreText = bestScore ? `${bestScore} محاولات` : 'لا يوجد';
                     const bestTimeText = bestTime ? formatTime(bestTime) : 'لا يوجد';
                     
-                    let message = `🎉 مبروك! أنت فزت!\nالمحاولات: ${attempts}\nالوقت: ${timeStr}\n${evaluation}`;
+                    let message = `🎉 مبروك! أنت فزت!\nالمحاولات: ${attempts}\nالوقت: ${timeStr}\n${evaluation}`;
                     if (isNewRecord) {
-                        message = `🏆 رقم قياسي جديد! 🏆\n${message}\n\nأفضل محاولات: ${bestScoreText}\nأفضل وقت: ${bestTimeText}`;
+                        message = `🏆 رقم قياسي جديد! 🏆\n${message}\n\nأفضل محاولات: ${bestScoreText}\nأفضل وقت: ${bestTimeText}`;
                     } else {
-                        message = `${message}\n\n🏆 أفضل محاولات: ${bestScoreText}\n🏆 أفضل وقت: ${bestTimeText}`;
+                        message = `${message}\n\n🏆 أفضل محاولات: ${bestScoreText}\n🏆 أفضل وقت: ${bestTimeText}`;
                     }
                     
                     showMessage(message, 'success');
                     lockBoard = true;
+
+                    // فتح رابط Adsterra تلقائياً بعد 1.5 ثانية من الفوز
+                    setTimeout(() => {
+                        window.open("https://www.effectivecpmnetwork.com/d7zpwx51?key=30be6e813273b463e96f5fe176774faa", "_blank");
+                    }, 1500);
                 }
 
                 resetTurn();
@@ -427,14 +452,14 @@
             }
         }
 
-        // إعادة تعيين الدور
+        // إعادة تعيين الدور
         function resetTurn() {
             firstCard = null;
             secondCard = null;
             lockBoard = false;
         }
 
-        // بدء المؤقت
+        // بدء المؤقت
         function startTimer() {
             if (timerInterval) return;
             timer = 0;
@@ -444,7 +469,7 @@
             }, 1000);
         }
 
-        // إيقاف المؤقت
+        // إيقاف المؤقت
         function stopTimer() {
             if (timerInterval) {
                 clearInterval(timerInterval);
@@ -452,12 +477,13 @@
             }
         }
 
-        // إعادة تعيين المؤقت
+        // إعادة تعيين المؤقت
         function resetTimer() {
             stopTimer();
             timer = 0;
             timerDisplay.textContent = '0';
             gameStarted = false;
+            isGameFinished = false;
         }
 
         // تنسيق الوقت
@@ -470,14 +496,14 @@
             return `${secs} ثانية`;
         }
 
-        // تقييم الأداء
+        // تقييم الأداء
         function evaluatePerformance(attempts) {
-            if (attempts <= 8) return '🏆 أسطورة الذاكرة! أداء خارق!';
+            if (attempts <= 8) return '🏆 أسطورة الذاكرة! أداء خارق!';
             if (attempts <= 10) return '⭐ ممتاز! ذاكرة قوية جداً!';
             if (attempts <= 13) return '👍 جيد جداً! ذاكرة جيدة!';
-            if (attempts <= 16) return '😐 متوسط، تحتاج إلى تمرين أكثر!';
-            if (attempts <= 20) return '😅 يحتاج تدريب، حاول مرة أخرى!';
-            return '🤯 لا بأس، الممارسة تجعلها أفضل!';
+            if (attempts <= 16) return '😐 متوسط، تحتاج إلى تمرين أكثر!';
+            if (attempts <= 20) return '😅 يحتاج تدريب، حاول مرة أخرى!';
+            return '🤯 لا بأس، الممارسة تجعلها أفضل!';
         }
 
         // عرض رسالة
@@ -486,12 +512,12 @@
             messageDisplay.className = `message show ${type}`;
         }
 
-        // إخفاء الرسالة
+        // إخفاء الرسالة
         function hideMessage() {
             messageDisplay.className = 'message';
         }
 
-        // إعادة تشغيل اللعبة
+        // إعادة تشغيل اللعبة
         function restartGame() {
             hideMessage();
             resetTimer();
@@ -501,6 +527,7 @@
             lockBoard = false;
             firstCard = null;
             secondCard = null;
+            isGameFinished = false;
             createCards();
             // عرض البطاقات لمدة 3 ثواني
             showAllCards();
@@ -517,7 +544,7 @@
             });
         }
 
-        // إخفاء جميع البطاقات
+        // إخفاء جميع البطاقات
         function hideAllCards() {
             cards.forEach(card => {
                 if (!card.classList.contains('matched')) {
@@ -528,13 +555,13 @@
             lockBoard = false;
         }
 
-        // عرض أفضل نتيجة
+        // عرض أفضل نتيجة
         function showBest() {
             if (bestScore) {
                 const timeText = bestTime ? formatTime(bestTime) : 'غير مسجل';
-                showMessage(`🏆 أفضل محاولات: ${bestScore}\n⏱️ أفضل وقت: ${timeText}`, 'info');
+                showMessage(`🏆 أفضل محاولات: ${bestScore}\n⏱️ أفضل وقت: ${timeText}`, 'info');
             } else {
-                showMessage('لا توجد نتائج مسجلة بعد. العب وسجل رقمك القياسي! 🎯', 'info');
+                showMessage('لا توجد نتائج مسجلة بعد. العب وسجل رقمك القياسي! 🎯', 'info');
             }
         }
 
