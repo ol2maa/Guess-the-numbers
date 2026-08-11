@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الذاكرة 🧠</title>
+    <title>🧠 Memory Game</title>
     <style>
+        /* جميع الأنماط كما هي دون تغيير */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +20,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .game-container {
             background: white;
             border-radius: 30px;
@@ -28,24 +27,41 @@
             max-width: 500px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
         }
-
+        .lang-switch {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+        }
+        .lang-switch:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
         .header {
             text-align: center;
             margin-bottom: 20px;
+            margin-top: 10px;
         }
-
         .header h1 {
             color: #667eea;
             font-size: 32px;
             margin-bottom: 5px;
         }
-
         .header .subtitle {
             color: #888;
             font-size: 14px;
         }
-
         .stats {
             display: flex;
             justify-content: space-between;
@@ -54,42 +70,34 @@
             background: #f8f9fa;
             border-radius: 15px;
         }
-
         .stat-item {
             text-align: center;
             flex: 1;
         }
-
         .stat-item .label {
             font-size: 12px;
             color: #888;
         }
-
         .stat-item .value {
             font-size: 20px;
             font-weight: bold;
             color: #333;
         }
-
         .stat-item .value.time {
             color: #ff6b6b;
         }
-
         .stat-item .value.attempts {
             color: #feca57;
         }
-
         .stat-item .value.best {
             color: #667eea;
         }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin: 20px 0;
         }
-
         .card {
             aspect-ratio: 1;
             background: #e0e0e0;
@@ -105,46 +113,38 @@
             color: #333;
             user-select: none;
         }
-
         .card:hover:not(.matched):not(.disabled) {
             transform: scale(1.05);
             border-color: #667eea;
         }
-
         .card.revealed {
             background: #ffd93d;
             border-color: #f6b93b;
         }
-
         .card.matched {
             background: #6bcf7f;
             border-color: #27ae60;
             cursor: default;
             transform: scale(0.95);
         }
-
         .card.wrong {
             background: #ff6b6b;
             border-color: #c0392b;
         }
-
         .card.hidden {
             background: #e0e0e0;
             color: transparent;
         }
-
         .card.disabled {
             cursor: not-allowed;
             opacity: 0.7;
         }
-
         .controls {
             display: flex;
             gap: 10px;
             margin-top: 20px;
             flex-wrap: wrap;
         }
-
         .btn {
             flex: 1;
             padding: 15px;
@@ -157,50 +157,41 @@
             color: white;
             min-width: 120px;
         }
-
         .btn-primary {
             background: #667eea;
         }
-
         .btn-primary:hover {
             background: #5a67d8;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-
         .btn-success {
             background: #6bcf7f;
         }
-
         .btn-success:hover {
             background: #5cb85c;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(107, 207, 127, 0.4);
         }
-
         .btn-warning {
             background: #feca57;
             color: #333;
         }
-
         .btn-warning:hover {
             background: #fdcb6e;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(254, 202, 87, 0.4);
         }
-
         .btn-ad {
             background: #ff5722;
             flex: 1;
             min-width: 120px;
         }
-
         .btn-ad:hover {
             background: #e64a19;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
         }
-
         .message {
             text-align: center;
             margin-top: 15px;
@@ -209,64 +200,65 @@
             font-weight: bold;
             display: none;
         }
-
         .message.show {
             display: block;
         }
-
         .message.success {
             background: #d4edda;
             color: #155724;
             border: 2px solid #b8daff;
         }
-
         .message.info {
             background: #d1ecf1;
             color: #0c5460;
             border: 2px solid #bee5eb;
         }
-
         @media (max-width: 400px) {
             .game-container {
                 padding: 15px;
             }
-            
             .card {
                 font-size: 24px;
             }
-            
             .header h1 {
                 font-size: 24px;
             }
-            
             .stats {
                 flex-wrap: wrap;
             }
-            
             .stat-item {
                 min-width: 45%;
+            }
+            .lang-switch {
+                top: 10px;
+                left: 10px;
+                font-size: 12px;
+                padding: 5px 12px;
             }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
+        <!-- زر تبديل اللغة -->
+        <button class="lang-switch" onclick="toggleLanguage()">🇬🇧 English</button>
+
         <div class="header">
-            <h1>🧠 لعبة الذاكرة</h1>
-            <div class="subtitle">تذكر الأزواج المتطابقة</div>
+            <h1 id="gameTitle">🧠 لعبة الذاكرة</h1>
+            <div class="subtitle" id="gameSubtitle">تذكر الأزواج المتطابقة</div>
         </div>
 
         <div class="stats">
             <div class="stat-item">
-                <div class="label">⏱️ الوقت</div>
+                <div class="label" id="labelTime">⏱️ الوقت</div>
                 <div class="value time" id="timer">0</div>
             </div>
             <div class="stat-item">
-                <div class="label">🎯 المحاولات</div>
+                <div class="label" id="labelAttempts">🎯 المحاولات</div>
                 <div class="value attempts" id="attempts">0</div>
             </div>
             <div class="stat-item">
-                <div class="label">🏆 أفضل محاولات</div>
+                <div class="label" id="labelBest">🏆 أفضل محاولات</div>
                 <div class="value best" id="bestScore">-</div>
             </div>
         </div>
@@ -274,10 +266,10 @@
         <div class="grid" id="grid"></div>
 
         <div class="controls">
-            <button class="btn btn-primary" onclick="restartGame()">🔄 إعادة التشغيل</button>
-            <button class="btn btn-success" onclick="showBest()">🏆 أفضل نتيجة</button>
+            <button class="btn btn-primary" onclick="restartGame()" id="btnRestart">🔄 إعادة التشغيل</button>
+            <button class="btn btn-success" onclick="showBest()" id="btnBest">🏆 أفضل نتيجة</button>
             <a href="https://www.effectivecpmnetwork.com/d7zpwx51?key=30be6e813273b463e96f5fe176774faa" target="_blank" style="flex:1; min-width:120px; text-decoration:none;">
-                <button class="btn btn-ad" style="width:100%;">🎁 احصل على مكافأتك!</button>
+                <button class="btn btn-ad" style="width:100%;" id="btnAd">🎁 احصل على مكافأتك!</button>
             </a>
         </div>
 
@@ -285,7 +277,65 @@
     </div>
 
     <script>
-        // متغيرات اللعبة
+        // ===== DICTIONARY =====
+        const lang = {
+            ar: {
+                title: '🧠 لعبة الذاكرة',
+                subtitle: 'تذكر الأزواج المتطابقة',
+                time: '⏱️ الوقت',
+                attempts: '🎯 المحاولات',
+                best: '🏆 أفضل محاولات',
+                restart: '🔄 إعادة التشغيل',
+                bestBtn: '🏆 أفضل نتيجة',
+                adBtn: '🎁 احصل على مكافأتك!',
+                win: '🎉 مبروك! أنت فزت!',
+                newRecord: '🏆 رقم قياسي جديد! 🏆',
+                bestScoreText: 'أفضل محاولات',
+                bestTimeText: 'أفضل وقت',
+                noRecord: 'لا يوجد',
+                noBest: 'لا توجد نتائج مسجلة بعد. العب وسجل رقمك القياسي! 🎯',
+                eval_legend: '🏆 أسطورة الذاكرة! أداء خارق!',
+                eval_excellent: '⭐ ممتاز! ذاكرة قوية جداً!',
+                eval_good: '👍 جيد جداً! ذاكرة جيدة!',
+                eval_medium: '😐 متوسط، تحتاج إلى تمرين أكثر!',
+                eval_poor: '😅 يحتاج تدريب، حاول مرة أخرى!',
+                eval_bad: '🤯 لا بأس، الممارسة تجعلها أفضل!',
+                attempts_word: 'محاولات',
+                time_word: 'الوقت',
+                seconds: 'ثانية',
+                not_recorded: 'غير مسجل'
+            },
+            en: {
+                title: '🧠 Memory Game',
+                subtitle: 'Match the pairs',
+                time: '⏱️ Time',
+                attempts: '🎯 Attempts',
+                best: '🏆 Best Attempts',
+                restart: '🔄 Restart',
+                bestBtn: '🏆 Best Score',
+                adBtn: '🎁 Claim Your Reward!',
+                win: '🎉 Congratulations! You won!',
+                newRecord: '🏆 New Record! 🏆',
+                bestScoreText: 'Best Attempts',
+                bestTimeText: 'Best Time',
+                noRecord: 'None',
+                noBest: 'No records yet. Play and set your best! 🎯',
+                eval_legend: '🏆 Memory Legend! Superb performance!',
+                eval_excellent: '⭐ Excellent! Very strong memory!',
+                eval_good: '👍 Very good! Great memory!',
+                eval_medium: '😐 Average, need more practice!',
+                eval_poor: '😅 Needs training, try again!',
+                eval_bad: '🤯 No worries, practice makes perfect!',
+                attempts_word: 'attempts',
+                time_word: 'Time',
+                seconds: 'seconds',
+                not_recorded: 'Not recorded'
+            }
+        };
+
+        let currentLang = 'ar';
+
+        // ===== GAME VARIABLES =====
         let cards = [];
         let cardValues = [];
         let matchedPairs = 0;
@@ -306,8 +356,38 @@
         const bestScoreDisplay = document.getElementById('bestScore');
         const messageDisplay = document.getElementById('message');
 
-        // تحديث عرض أفضل نتيجة
+        // ===== LANGUAGE FUNCTIONS =====
+        function toggleLanguage() {
+            currentLang = (currentLang === 'ar') ? 'en' : 'ar';
+            updateLanguage();
+            // تحديث اتجاه الصفحة
+            document.documentElement.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            // تحديث زر اللغة
+            const btn = document.querySelector('.lang-switch');
+            btn.textContent = (currentLang === 'ar') ? '🇬🇧 English' : '🇸🇦 العربية';
+        }
+
+        function updateLanguage() {
+            const t = lang[currentLang];
+            document.getElementById('gameTitle').textContent = t.title;
+            document.getElementById('gameSubtitle').textContent = t.subtitle;
+            document.getElementById('labelTime').textContent = t.time;
+            document.getElementById('labelAttempts').textContent = t.attempts;
+            document.getElementById('labelBest').textContent = t.best;
+            document.getElementById('btnRestart').textContent = t.restart;
+            document.getElementById('btnBest').textContent = t.bestBtn;
+            document.getElementById('btnAd').textContent = t.adBtn;
+            // تحديث الرسائل المعروضة إن وجدت
+            const msg = document.getElementById('message');
+            if (msg.classList.contains('show')) {
+                // إعادة عرض الرسالة باللغة الجديدة (سيتم تحديثها عند下次 فوز)
+            }
+        }
+
+        // ===== GAME FUNCTIONS =====
         function updateBestDisplay() {
+            const t = lang[currentLang];
             if (bestScore) {
                 bestScoreDisplay.textContent = bestScore;
             } else {
@@ -315,7 +395,6 @@
             }
         }
 
-        // إنشاء الأرقام
         function generateNumbers() {
             const numbers = [];
             for (let i = 1; i <= 8; i++) {
@@ -324,7 +403,6 @@
             return shuffleArray(numbers);
         }
 
-        // خلط المصفوفة
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -333,7 +411,6 @@
             return array;
         }
 
-        // إنشاء البطاقات
         function createCards() {
             const values = generateNumbers();
             cardValues = values;
@@ -352,7 +429,6 @@
             });
         }
 
-        // قلب البطاقة
         function flipCard(card) {
             if (lockBoard) return;
             if (card === firstCard) return;
@@ -360,7 +436,6 @@
             if (card.classList.contains('revealed')) return;
             if (isGameFinished) return;
 
-            // بدء المؤقت عند أول نقرة
             if (!gameStarted) {
                 startTimer();
                 gameStarted = true;
@@ -378,17 +453,15 @@
             attempts++;
             attemptsDisplay.textContent = attempts;
             lockBoard = true;
-
             checkMatch();
         }
 
-        // التحقق من التطابق
         function checkMatch() {
             const value1 = firstCard.dataset.value;
             const value2 = secondCard.dataset.value;
+            const t = lang[currentLang];
 
             if (value1 === value2) {
-                // تطابق
                 firstCard.classList.remove('revealed');
                 secondCard.classList.remove('revealed');
                 firstCard.classList.add('matched');
@@ -396,13 +469,11 @@
                 matchedPairs++;
 
                 if (matchedPairs === 8) {
-                    // فوز
                     isGameFinished = true;
                     stopTimer();
                     const timeStr = formatTime(timer);
                     const evaluation = evaluatePerformance(attempts);
                     
-                    // تحديث أفضل نتيجة
                     let isNewRecord = false;
                     if (!bestScore || attempts < parseInt(bestScore)) {
                         bestScore = attempts;
@@ -417,28 +488,26 @@
                         isNewRecord = true;
                     }
 
-                    const bestScoreText = bestScore ? `${bestScore} محاولات` : 'لا يوجد';
-                    const bestTimeText = bestTime ? formatTime(bestTime) : 'لا يوجد';
+                    const bestScoreText = bestScore ? `${bestScore} ${t.attempts_word}` : t.noRecord;
+                    const bestTimeText = bestTime ? formatTime(bestTime) : t.noRecord;
                     
-                    let message = `🎉 مبروك! أنت فزت!\nالمحاولات: ${attempts}\nالوقت: ${timeStr}\n${evaluation}`;
+                    let message = `${t.win}\n${t.attempts_word}: ${attempts}\n${t.time_word}: ${timeStr}\n${evaluation}`;
                     if (isNewRecord) {
-                        message = `🏆 رقم قياسي جديد! 🏆\n${message}\n\nأفضل محاولات: ${bestScoreText}\nأفضل وقت: ${bestTimeText}`;
+                        message = `${t.newRecord}\n${message}\n\n🏆 ${t.bestScoreText}: ${bestScoreText}\n🏆 ${t.bestTimeText}: ${bestTimeText}`;
                     } else {
-                        message = `${message}\n\n🏆 أفضل محاولات: ${bestScoreText}\n🏆 أفضل وقت: ${bestTimeText}`;
+                        message = `${message}\n\n🏆 ${t.bestScoreText}: ${bestScoreText}\n🏆 ${t.bestTimeText}: ${bestTimeText}`;
                     }
                     
                     showMessage(message, 'success');
                     lockBoard = true;
 
-                    // فتح رابط Adsterra تلقائياً بعد 1.5 ثانية من الفوز
+                    // فتح رابط Adsterra تلقائياً بعد 1.5 ثانية
                     setTimeout(() => {
                         window.open("https://www.effectivecpmnetwork.com/d7zpwx51?key=30be6e813273b463e96f5fe176774faa", "_blank");
                     }, 1500);
                 }
-
                 resetTurn();
             } else {
-                // غير متطابق
                 firstCard.classList.add('wrong');
                 secondCard.classList.add('wrong');
 
@@ -452,14 +521,12 @@
             }
         }
 
-        // إعادة تعيين الدور
         function resetTurn() {
             firstCard = null;
             secondCard = null;
             lockBoard = false;
         }
 
-        // بدء المؤقت
         function startTimer() {
             if (timerInterval) return;
             timer = 0;
@@ -469,7 +536,6 @@
             }, 1000);
         }
 
-        // إيقاف المؤقت
         function stopTimer() {
             if (timerInterval) {
                 clearInterval(timerInterval);
@@ -477,7 +543,6 @@
             }
         }
 
-        // إعادة تعيين المؤقت
         function resetTimer() {
             stopTimer();
             timer = 0;
@@ -486,38 +551,35 @@
             isGameFinished = false;
         }
 
-        // تنسيق الوقت
         function formatTime(seconds) {
+            const t = lang[currentLang];
             const mins = Math.floor(seconds / 60);
             const secs = seconds % 60;
             if (mins > 0) {
                 return `${mins}:${secs.toString().padStart(2, '0')}`;
             }
-            return `${secs} ثانية`;
+            return `${secs} ${t.seconds}`;
         }
 
-        // تقييم الأداء
         function evaluatePerformance(attempts) {
-            if (attempts <= 8) return '🏆 أسطورة الذاكرة! أداء خارق!';
-            if (attempts <= 10) return '⭐ ممتاز! ذاكرة قوية جداً!';
-            if (attempts <= 13) return '👍 جيد جداً! ذاكرة جيدة!';
-            if (attempts <= 16) return '😐 متوسط، تحتاج إلى تمرين أكثر!';
-            if (attempts <= 20) return '😅 يحتاج تدريب، حاول مرة أخرى!';
-            return '🤯 لا بأس، الممارسة تجعلها أفضل!';
+            const t = lang[currentLang];
+            if (attempts <= 8) return t.eval_legend;
+            if (attempts <= 10) return t.eval_excellent;
+            if (attempts <= 13) return t.eval_good;
+            if (attempts <= 16) return t.eval_medium;
+            if (attempts <= 20) return t.eval_poor;
+            return t.eval_bad;
         }
 
-        // عرض رسالة
         function showMessage(text, type = 'info') {
             messageDisplay.textContent = text;
             messageDisplay.className = `message show ${type}`;
         }
 
-        // إخفاء الرسالة
         function hideMessage() {
             messageDisplay.className = 'message';
         }
 
-        // إعادة تشغيل اللعبة
         function restartGame() {
             hideMessage();
             resetTimer();
@@ -529,14 +591,12 @@
             secondCard = null;
             isGameFinished = false;
             createCards();
-            // عرض البطاقات لمدة 3 ثواني
             showAllCards();
             setTimeout(() => {
                 hideAllCards();
             }, 3000);
         }
 
-        // عرض جميع البطاقات
         function showAllCards() {
             cards.forEach(card => {
                 card.classList.remove('hidden');
@@ -544,7 +604,6 @@
             });
         }
 
-        // إخفاء جميع البطاقات
         function hideAllCards() {
             cards.forEach(card => {
                 if (!card.classList.contains('matched')) {
@@ -555,28 +614,27 @@
             lockBoard = false;
         }
 
-        // عرض أفضل نتيجة
         function showBest() {
+            const t = lang[currentLang];
             if (bestScore) {
-                const timeText = bestTime ? formatTime(bestTime) : 'غير مسجل';
-                showMessage(`🏆 أفضل محاولات: ${bestScore}\n⏱️ أفضل وقت: ${timeText}`, 'info');
+                const timeText = bestTime ? formatTime(bestTime) : t.not_recorded;
+                showMessage(`🏆 ${t.bestScoreText}: ${bestScore}\n⏱️ ${t.bestTimeText}: ${timeText}`, 'info');
             } else {
-                showMessage('لا توجد نتائج مسجلة بعد. العب وسجل رقمك القياسي! 🎯', 'info');
+                showMessage(t.noBest, 'info');
             }
         }
 
-        // بدء اللعبة
         function initGame() {
             updateBestDisplay();
             createCards();
-            // عرض البطاقات لمدة 3 ثواني
             showAllCards();
             setTimeout(() => {
                 hideAllCards();
             }, 3000);
+            // ضبط اللغة الافتراضية
+            updateLanguage();
         }
 
-        // بدء التشغيل
         initGame();
     </script>
 </body>
