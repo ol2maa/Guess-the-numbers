@@ -3,255 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الأرقام - Memory Game</title>
+    <title>تذكر الأزواج</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Tahoma', sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
         body {
-            background: #0f172a;
+            background: linear-gradient(145deg, #0b1a2e, #1a2f44);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px 20px 80px;
+            padding: 20px 20px 90px;
         }
-        .game-container {
-            background: #1e293b;
-            padding: 30px 25px;
-            border-radius: 28px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+        .game-wrapper {
+            background: #1e3a5f;
+            padding: 25px 20px 30px;
+            border-radius: 40px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.7);
             max-width: 500px;
             width: 100%;
             text-align: center;
-            color: #f1f5f9;
         }
         h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
             color: #facc15;
+            font-size: 26px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
         }
-        .sub {
-            margin-bottom: 20px;
-            color: #94a3b8;
-            font-size: 15px;
-        }
-        .number-box {
-            background: #0f172a;
-            padding: 30px 10px;
-            border-radius: 20px;
-            margin: 15px 0 20px;
-            font-size: 64px;
-            font-weight: bold;
-            color: #38bdf8;
-            letter-spacing: 4px;
-            border: 2px dashed #334155;
-        }
-        .input-area {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        input {
-            flex: 1;
-            min-width: 140px;
-            padding: 14px 16px;
-            border: none;
-            border-radius: 40px;
-            font-size: 18px;
-            text-align: center;
-            background: #0f172a;
-            color: #f8fafc;
-            outline: 2px solid #334155;
-            transition: 0.2s;
-        }
-        input:focus {
-            outline-color: #facc15;
-        }
-        button {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 40px;
-            font-size: 18px;
-            font-weight: bold;
-            background: #facc15;
-            color: #0f172a;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 5px 0 #b9910e;
-        }
-        button:active {
-            transform: translateY(4px);
-            box-shadow: 0 1px 0 #b9910e;
-        }
-        .message {
-            margin: 18px 0 10px;
-            font-size: 20px;
-            min-height: 40px;
-            font-weight: 500;
+        .sub-title {
+            color: #94b8d9;
+            font-size: 14px;
+            margin-bottom: 18px;
         }
         .stats {
             display: flex;
             justify-content: space-around;
-            background: #0f172a;
-            padding: 14px 8px;
-            border-radius: 40px;
-            margin-top: 25px;
-            font-size: 15px;
-            color: #cbd5e1;
+            background: #0f2a44;
+            padding: 12px 5px;
+            border-radius: 50px;
+            margin-bottom: 18px;
+            color: #dfe9f3;
+            font-weight: 600;
+            font-size: 16px;
         }
         .stats span {
             color: #facc15;
+            font-size: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 18px 0 20px;
+        }
+        .card {
+            aspect-ratio: 1 / 1;
+            background: #facc15;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
             font-weight: bold;
+            color: #0b1a2e;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #b9910e, 0 8px 15px rgba(0,0,0,0.3);
+            transition: 0.15s;
+            user-select: none;
+        }
+        .card.flipped, .card.matched {
+            background: #2d4f78;
+            box-shadow: 0 4px 0 #1a3452;
+            color: white;
+            cursor: default;
+        }
+        .card.matched {
+            background: #2b7a4b;
+            box-shadow: 0 4px 0 #1a5332;
+        }
+        .card:active:not(.flipped):not(.matched) {
+            transform: scale(0.94);
+        }
+        .bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            gap: 10px;
+        }
+        .best-result {
+            background: #0f2a44;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: #facc15;
+            font-weight: bold;
+            font-size: 18px;
         }
         .reset-btn {
-            background: #475569;
-            color: #f1f5f9;
-            box-shadow: 0 5px 0 #1e293b;
-            margin-top: 12px;
-            padding: 12px 32px;
+            background: #facc15;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 17px;
+            color: #0b1a2e;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #b9910e;
+            transition: 0.1s;
+        }
+        .reset-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #b9910e;
         }
 
-        /* ===== الإعلان السفلي الوحيد ===== */
+        /* ===== الإعلان السفلي ===== */
         #ad-bottom {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             text-align: center;
-            background: #1e293b;
+            background: #0f2a44;
             padding: 12px 0;
             z-index: 9999;
             border-top: 3px solid #facc15;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
         }
         #ad-bottom a {
             font-size: 20px;
             font-weight: bold;
             color: #facc15;
             text-decoration: none;
-            background: #0f172a;
-            padding: 8px 30px;
+            background: #1e3a5f;
+            padding: 8px 32px;
             border-radius: 40px;
             display: inline-block;
-            transition: 0.2s;
             border: 1px solid #facc15;
+            transition: 0.2s;
         }
         #ad-bottom a:hover {
             background: #facc15;
-            color: #0f172a;
+            color: #0b1a2e;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <h1>🔢 خمن الرقم</h1>
-        <p class="sub">أدخل رقمًا بين 1 و 100</p>
+<div class="game-wrapper">
+    <h1>🧠 تذكر الأزواج</h1>
+    <p class="sub-title">أوجد الأزواج المتطابقة</p>
 
-        <div class="number-box" id="guessDisplay">??</div>
-
-        <div class="input-area">
-            <input type="number" id="guessInput" placeholder="رقمك..." min="1" max="100">
-            <button id="guessBtn">✅ تخمين</button>
-        </div>
-
-        <div class="message" id="message">🟡 ابدأ اللعب!</div>
-
-        <div class="stats">
-            <div>🔄 محاولات: <span id="attempts">0</span></div>
-            <div>🎯 أفضل: <span id="bestScore">-</span></div>
-        </div>
-
-        <button class="reset-btn" id="resetBtn">🔄 لعبة جديدة</button>
+    <div class="stats">
+        <div>🔄 المحاولات <br><span id="attempts">0</span></div>
+        <div>⏱️ الوقت <br><span id="timer">0</span>s</div>
+        <div>🏆 أفضل <br><span id="best">-</span></div>
     </div>
 
-    <!-- ===== الإعلان السفلي الوحيد (احصل على جائزتك) ===== -->
-    <div id="ad-bottom">
-        <a href="https://رابط-جائزتك.com" target="_blank">🎁 احصل على جائزتك</a>
+    <div class="grid" id="grid"></div>
+
+    <div class="bottom-row">
+        <div class="best-result">⭐ أفضل نتيجة: <span id="bestResult">-</span></div>
+        <button class="reset-btn" id="resetBtn">🔁 إعادة التشغيل</button>
     </div>
+</div>
 
-    <script>
-        (function() {
-            let secret = Math.floor(Math.random() * 100) + 1;
-            let attempts = 0;
-            let best = localStorage.getItem('bestMemoryGame') || null;
+<!-- ===== الإعلان السفلي الوحيد ===== -->
+<div id="ad-bottom">
+    <a href="https://رابط-مكافاتك.com" target="_blank">🎁 احصل على مكافآتك! 😊</a>
+</div>
 
-            const guessDisplay = document.getElementById('guessDisplay');
-            const guessInput = document.getElementById('guessInput');
-            const guessBtn = document.getElementById('guessBtn');
-            const message = document.getElementById('message');
-            const attemptsSpan = document.getElementById('attempts');
-            const bestSpan = document.getElementById('bestScore');
+<script>
+    (function() {
+        // الأرقام (8 أزواج)
+        const PAIRS = [1, 2, 3, 4, 5, 6, 7, 8];
+        let cards = [];
+        let flippedIndices = [];
+        let matchedPairs = 0;
+        let attempts = 0;
+        let timer = 0;
+        let timerInterval = null;
+        let isLocked = false;
+        let best = localStorage.getItem('memoryBest') || null;
 
-            function updateUI() {
-                attemptsSpan.textContent = attempts;
-                bestSpan.textContent = best ? best : '-';
+        const gridEl = document.getElementById('grid');
+        const attemptsEl = document.getElementById('attempts');
+        const timerEl = document.getElementById('timer');
+        const bestEl = document.getElementById('best');
+        const bestResultEl = document.getElementById('bestResult');
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-            if (best) bestSpan.textContent = best;
+            return arr;
+        }
 
-            function resetGame() {
-                secret = Math.floor(Math.random() * 100) + 1;
-                attempts = 0;
-                guessDisplay.textContent = '??';
-                message.innerHTML = '🟡 لعبة جديدة! ابدأ التخمين';
-                guessInput.value = '';
-                guessInput.disabled = false;
-                guessBtn.disabled = false;
-                updateUI();
+        function initGame() {
+            // إيقاف المؤقت القديم
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timer = 0;
+            timerEl.textContent = '0';
+            attempts = 0;
+            attemptsEl.textContent = '0';
+            matchedPairs = 0;
+            flippedIndices = [];
+            isLocked = false;
+            if (best) {
+                bestEl.textContent = best;
+                bestResultEl.textContent = best;
+            } else {
+                bestEl.textContent = '-';
+                bestResultEl.textContent = '-';
             }
 
-            function checkGuess() {
-                const raw = guessInput.value.trim();
-                if (raw === '') {
-                    message.innerHTML = '⚠️ أدخل رقمًا أولاً';
-                    return;
-                }
-                const guess = Number(raw);
-                if (isNaN(guess) || guess < 1 || guess > 100) {
-                    message.innerHTML = '❌ الرقم يجب أن يكون بين 1 و 100';
-                    return;
-                }
+            // تحضير البطاقات
+            let deck = [...PAIRS, ...PAIRS];
+            deck = shuffle(deck);
+            cards = deck.map((value, index) => ({
+                id: index,
+                value: value,
+                flipped: false,
+                matched: false
+            }));
 
-                attempts++;
-                if (guess === secret) {
-                    message.innerHTML = `🎉 صحيح! الرقم هو ${secret}`;
-                    guessDisplay.textContent = secret;
-                    guessInput.disabled = true;
-                    guessBtn.disabled = true;
-                    if (best === null || attempts < best) {
-                        best = attempts;
-                        localStorage.setItem('bestMemoryGame', best);
-                    }
-                    updateUI();
-                    return;
-                } else if (guess < secret) {
-                    message.innerHTML = '⬆️ الرقم أكبر من ذلك';
-                    guessDisplay.textContent = '⬆️';
+            renderGrid();
+        }
+
+        function renderGrid() {
+            gridEl.innerHTML = '';
+            cards.forEach((card, index) => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.dataset.index = index;
+                if (card.flipped || card.matched) {
+                    div.classList.add('flipped');
+                    div.textContent = card.value;
+                    if (card.matched) div.classList.add('matched');
                 } else {
-                    message.innerHTML = '⬇️ الرقم أصغر من ذلك';
-                    guessDisplay.textContent = '⬇️';
+                    div.textContent = '?';
                 }
-                guessInput.value = '';
-                guessInput.focus();
-                updateUI();
+                div.addEventListener('click', () => onCardClick(index));
+                gridEl.appendChild(div);
+            });
+        }
+
+        function onCardClick(index) {
+            if (isLocked) return;
+            const card = cards[index];
+            if (card.flipped || card.matched) return;
+            if (flippedIndices.length === 2) return;
+
+            // بدء المؤقت عند أول نقرة
+            if (!timerInterval && matchedPairs === 0) {
+                timerInterval = setInterval(() => {
+                    timer++;
+                    timerEl.textContent = timer;
+                }, 1000);
             }
 
-            guessBtn.addEventListener('click', checkGuess);
-            guessInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') checkGuess();
-            });
-            document.getElementById('resetBtn').addEventListener('click', resetGame);
+            // قلب البطاقة
+            card.flipped = true;
+            flippedIndices.push(index);
+            renderGrid();
 
-            // بداية
-            resetGame();
-        })();
-    </script>
+            if (flippedIndices.length === 2) {
+                attempts++;
+                attemptsEl.textContent = attempts;
+                isLocked = true;
+
+                const idx1 = flippedIndices[0];
+                const idx2 = flippedIndices[1];
+                const val1 = cards[idx1].value;
+                const val2 = cards[idx2].value;
+
+                if (val1 === val2) {
+                    cards[idx1].matched = true;
+                    cards[idx2].matched = true;
+                    matchedPairs++;
+                    flippedIndices = [];
+                    isLocked = false;
+                    renderGrid();
+
+                    if (matchedPairs === PAIRS.length) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        // تحديث أفضل نتيجة
+                        if (best === null || attempts < best) {
+                            best = attempts;
+                            localStorage.setItem('memoryBest', best);
+                            bestEl.textContent = best;
+                            bestResultEl.textContent = best;
+                        }
+                    }
+                } else {
+                    // إعادة الإخفاء بعد نصف ثانية
+                    setTimeout(() => {
+                        cards[idx1].flipped = false;
+                        cards[idx2].flipped = false;
+                        flippedIndices = [];
+                        isLocked = false;
+                        renderGrid();
+                    }, 500);
+                }
+            }
+        }
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            initGame();
+        });
+
+        // بدء اللعبة
+        initGame();
+    })();
+</script>
 
 </body>
 </html>
