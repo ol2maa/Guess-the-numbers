@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🧠 Memory Game</title>
+    
+    <!-- ========================================== -->
+    <!-- 👇 كود Google Analytics من صورتك (تم وضعه هنا) 👇 -->
+    <!-- ========================================== -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DWKZ2XPMSS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DWKZ2XPMSS');
+    </script>
+    <!-- ========================================== -->
+
     <style>
         /* جميع الأنماط كما هي دون تغيير */
         * {
@@ -182,16 +195,6 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(254, 202, 87, 0.4);
         }
-        .btn-ad {
-            background: #ff5722;
-            flex: 1;
-            min-width: 120px;
-        }
-        .btn-ad:hover {
-            background: #e64a19;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-        }
         .message {
             text-align: center;
             margin-top: 15px;
@@ -268,9 +271,6 @@
         <div class="controls">
             <button class="btn btn-primary" onclick="restartGame()" id="btnRestart">🔄 إعادة التشغيل</button>
             <button class="btn btn-success" onclick="showBest()" id="btnBest">🏆 أفضل نتيجة</button>
-            <a href="https://www.effectivecpmnetwork.com/d7zpwx51?key=30be6e813273b463e96f5fe176774faa" target="_blank" style="flex:1; min-width:120px; text-decoration:none;">
-                <button class="btn btn-ad" style="width:100%;" id="btnAd">🎁 احصل على مكافأتك!</button>
-            </a>
         </div>
 
         <div class="message" id="message"></div>
@@ -287,7 +287,6 @@
                 best: '🏆 أفضل محاولات',
                 restart: '🔄 إعادة التشغيل',
                 bestBtn: '🏆 أفضل نتيجة',
-                adBtn: '🎁 احصل على مكافأتك!',
                 win: '🎉 مبروك! أنت فزت!',
                 newRecord: '🏆 رقم قياسي جديد! 🏆',
                 bestScoreText: 'أفضل محاولات',
@@ -313,7 +312,6 @@
                 best: '🏆 Best Attempts',
                 restart: '🔄 Restart',
                 bestBtn: '🏆 Best Score',
-                adBtn: '🎁 Claim Your Reward!',
                 win: '🎉 Congratulations! You won!',
                 newRecord: '🏆 New Record! 🏆',
                 bestScoreText: 'Best Attempts',
@@ -377,7 +375,6 @@
             document.getElementById('labelBest').textContent = t.best;
             document.getElementById('btnRestart').textContent = t.restart;
             document.getElementById('btnBest').textContent = t.bestBtn;
-            document.getElementById('btnAd').textContent = t.adBtn;
             // تحديث الرسائل المعروضة إن وجدت
             const msg = document.getElementById('message');
             if (msg.classList.contains('show')) {
@@ -500,11 +497,6 @@
                     
                     showMessage(message, 'success');
                     lockBoard = true;
-
-                    // فتح رابط إعلان الزر البرتقالي تلقائياً بعد 1.5 ثانية
-                    setTimeout(() => {
-                        window.open("https://www.effectivecpmnetwork.com/d7zpwx51?key=30be6e813273b463e96f5fe176774faa", "_blank");
-                    }, 1500);
                 }
                 resetTurn();
             } else {
@@ -637,5 +629,12 @@
 
         initGame();
     </script>
+
+    <!-- ========================================== -->
+    <!-- 👇 كود Adsterra (تمت إعادته هنا) 👇 -->
+    <!-- ========================================== -->
+    <script src="https://pl30800280.effectivecpmnetwork.com/e9/d4/4d/e9d44de22207ee3a9325b160d53118c4.js"></script>
+    <!-- ========================================== -->
+
 </body>
 </html>
